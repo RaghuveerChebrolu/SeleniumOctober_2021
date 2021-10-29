@@ -2,8 +2,8 @@ package com.java.controlStatements;
 
 public class switchStatementExample {
 	public static void main(String[] args) {
-		char ch = 'O';
-		int count =8;
+		char ch = '6';
+		int count =98;
 		switch (ch) {
 		case 'a':
 			System.out.println("Vowel");
@@ -36,7 +36,7 @@ public class switchStatementExample {
 			System.out.println("Vowel");
 			break;
 		default:
-			System.out.println("Consonant");
+			System.out.println("Constant");
 		}
 		switch (count) {
 		case 1:
