@@ -22,18 +22,38 @@ public class testNgTestCases {
 	public WebDriver driver=null;
 	//public static int=10;
   
-  @Test
+  @Test(priority=0)
   public void validtaeGMO_OnlineLaunchedSuccessfully() {
-	  System.out.println("inside Test case 5");
+	  System.out.println("inside Test case validtaeGMO_OnlineLaunchedSuccessfully");
 	  String ActualTitle=driver.getTitle();
 	  System.out.println("ActualTitle: "+ActualTitle);
-	  String ExpectedTitle="Welcome to Green Mountain Outpos";
+	  String ExpectedTitle="Welcome to Green Mountain Outpost";
 	  Assert.assertEquals(ActualTitle, ExpectedTitle);
 	 // Assert.assertEquals(ActualTitle, "Welcome to Green Mountain Outpost");
 	/*  the above is the first test case in 
 	  selenium*/
   }
 
+  @Test(priority=1)
+  public void validtaeEnterGMO_OnlineSuccessfully() {
+	  System.out.println("inside Test case validtaeEnterGMO_OnlineSuccessfully");
+	  driver.findElement(By.name("bSubmit")).click();
+	  String ActualTile = driver.findElement(By.xpath("//h1[contains(text(),'OnLine Catalog')]")).getText();
+	  Assert.assertEquals(ActualTile, "OnLine Catalog");
+	  driver.findElement(By.xpath("//input[@name='QTY_BACKPACKS']")).sendKeys("4");
+	  driver.findElement(By.xpath("//input[@value='Place An Order']")).click();
+	  String innerhtml=driver.findElement(By.xpath("//p[@align='center']")).getAttribute("innerHTML");
+	  String outhtml=driver.findElement(By.xpath("//p[@align='center']")).getAttribute("outerHTML");
+	  System.out.println(innerhtml);
+	  System.out.println(outhtml);
+	  if(innerhtml.contains("Proceed With Order")){
+		  Assert.assertTrue(true, "validated description inside place order page");
+	  }else{
+		  Assert.assertTrue(false, "validated description inside place order page");
+	  }
+	  String UnitPrice = driver.findElement(By.xpath("//table/tbody/tr[2]/td[4]")).getText();
+	 System.out.println("UnitPrice: "+UnitPrice);
+  }
   
   @BeforeMethod
   public void beforeMethod() {
@@ -68,13 +88,13 @@ public class testNgTestCases {
   @BeforeSuite
   public void beforeSuite() {
 	  System.out.println("inside beforeSuite");
-	 /* WebDriverManager.edgedriver().setup();
-	  driver= new EdgeDriver();
+	  WebDriverManager.chromedriver().setup();
+	  driver= new ChromeDriver();
 	  driver.get("http://demo.borland.com/gmopost/");
 	  driver.manage().window().maximize();
-	  Boolean flag=driver.findElement(By.id("name")).isEnabled();*/
+	 // Boolean flag=driver.findElement(By.id("name")).isEnabled();
 	   
-		  int x=10;  
+		/*  int x=10;  
 		  System.out.println(x++);//10 (11)  
 		  System.out.println(++x);//12  
 		  System.out.println(x--);//12 (11)  
@@ -82,7 +102,7 @@ public class testNgTestCases {
 		  int a=7;  
 		  int b=5;  
 		  int min=(a<b)?a:b;  
-		  System.out.println(min);
+		  System.out.println(min);*/
 		   
   }
 
