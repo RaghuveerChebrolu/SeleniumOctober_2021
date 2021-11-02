@@ -21,12 +21,12 @@ public class testNgAnnotations {
 	  System.out.println("inside Test case 2");
   }
   
-  @Test
+  @Test(enabled = false)
   public void Bestcase3() {
 	  System.out.println("inside Test case 3");
   }
   
-  @Test
+  @Test(invocationCount=10)
   public void Testcase4() {
 	  System.out.println("inside Test case 4");
   }

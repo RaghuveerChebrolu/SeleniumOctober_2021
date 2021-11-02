@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Suite">
+	<test thread-count="5" name="testNgTestCases">
+		<classes>
+			<class name="com.TestNg.TestCases.testNgTestCases">
+				<!-- <methods>
+					<include name="validtaeGMO_OnlineLaunchedSuccessfully"></include>
+					<include name="validtaeGMO_OnlineLaunchedSuccessfully"></include>
+					<include name="validtaeGMO_OnlineLaunchedSuccessfully"></include>
+					<include name="validtaeGMO_OnlineLaunchedSuccessfully"></include>
+				</methods> -->
+			</class>
+			<class name="com.TestNg.TestCases.testNgAnnotations">
+				<methods>
+					<include name="case2"></include>
+				</methods>
+			</class>
+		</classes>
+	</test> <!-- testNgTestCases -->
+</suite> <!-- Suite -->
