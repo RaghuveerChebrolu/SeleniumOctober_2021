@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -86,9 +87,50 @@ public class testNgTestCases2 {
 		Thread.sleep(8000);
 		driver.navigate().forward();
 		Thread.sleep(8000);
+		System.out.println("current URL:"+driver.getCurrentUrl());
 	}
 	
-	
+	@Test(priority=2)
+	public void ValidatingHandlingOfAlerts() throws InterruptedException{
+		System.out.println("inside ValidatingHandlingOfAlerts");
+		//driver.get(url);
+		driver.navigate().to(ObjProp.getProperty("AlertURL"));
+		waitForPageToLoad();
+		driver.findElement(By.id("alertButton")).click();
+		Alert obj = driver.switchTo().alert();
+		String text = obj.getText();
+		System.out.println(text);
+		Thread.sleep(5000);
+		Assert.assertEquals(text, "You clicked a button");
+		obj.accept();
+		//2nd alert
+		driver.findElement(By.id("timerAlertButton")).click();
+		Thread.sleep(5000);
+		Alert obj1 = driver.switchTo().alert();
+		String timerText = obj1.getText();
+		Assert.assertEquals(timerText, "This alert appeared after 5 seconds");
+		//JavascriptExecutor js = (JavascriptExecutor)driver;
+		//js.executeScript("arguments[0].scrollIntoView(true);",obj1);
+		obj1.accept();
+		//3rd alert
+		driver.findElement(By.id("confirmButton")).click();
+		Alert obj3 = driver.switchTo().alert();
+		String confirmBoxText = obj3.getText();
+		Assert.assertEquals(confirmBoxText, "Do you confirm action?");
+		obj3.dismiss();
+		
+		String confirmBocResultText= driver.findElement(By.id("confirmResult")).getText();
+		Assert.assertEquals(confirmBocResultText, "You selected Cancel");
+		//4th alert
+		driver.findElement(By.id("promtButton")).click();
+		Alert obj4 = driver.switchTo().alert();
+		obj4.sendKeys("I am Learning Selenium");
+		obj4.accept();
+		String PromptResult = driver.findElement(By.id("promptResult")).getText();
+		Assert.assertEquals(PromptResult, "You entered I am Learning Selenium");
+		
+		
+	}
 
 	@BeforeMethod
 	public void beforeMethod() {
