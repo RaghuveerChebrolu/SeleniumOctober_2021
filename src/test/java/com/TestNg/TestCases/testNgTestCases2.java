@@ -129,7 +129,6 @@ public class testNgTestCases2 {
 		String PromptResult = driver.findElement(By.id("promptResult")).getText();
 		Assert.assertEquals(PromptResult, "You entered I am Learning Selenium");
 		
-		
 	}
 
 	@BeforeMethod
