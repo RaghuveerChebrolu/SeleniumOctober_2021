@@ -13,13 +13,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -129,6 +135,25 @@ public class testNgTestCases2 {
 		String PromptResult = driver.findElement(By.id("promptResult")).getText();
 		Assert.assertEquals(PromptResult, "You entered I am Learning Selenium");
 		
+	}
+	
+	@Test(priority=3)
+	public void HandlingFrames() throws Exception{
+		System.out.println("inside HandlingFrames");
+		driver.navigate().to(ObjProp.getProperty("FramesURL"));
+		waitForPageToLoad();
+		driver.switchTo().frame("singleframe");
+		takescreeshot(driver);
+		driver.findElement(By.xpath("//input[@type='text']")).sendKeys("text area inside frame");
+		driver.switchTo().defaultContent();
+		driver.findElement(By.xpath("//a[contains(text(),'Iframe with in an Iframe')]")).click();
+		WebElement ParentframeElement = driver.findElement(By.xpath("//iframe[@src='MultipleFrames.html']"));
+		driver.switchTo().frame(ParentframeElement);
+		WebElement childframeElement = driver.findElement(By.xpath("//iframe[@src='SingleFrame.html']"));
+		driver.switchTo().frame(childframeElement);
+		takescreeshot(driver);
+		driver.findElement(By.xpath("//input[@type='text']")).sendKeys("text area inside second frame");
+		driver.switchTo().defaultContent();
 	}
 
 	@BeforeMethod
@@ -260,6 +285,14 @@ public class testNgTestCases2 {
 		wait.until(pageLoadCondition);
 	}
 
+	public String takescreeshot(WebDriver driver) throws Exception {
+		File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		String dateName = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date());
+		System.out.println(dateName);
+		String destination = System.getProperty("user.dir") + "//screenshots//" + dateName
+				+ "captured.png";
+		FileUtils.copyFile(source, new File(destination));
+		return destination;
+	}
 
-	
 }
