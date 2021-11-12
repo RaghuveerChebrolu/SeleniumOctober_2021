@@ -1,0 +1,226 @@
+package com.TestNg.TestCases;
+
+import org.testng.annotations.Test;
+import org.testng.asserts.SoftAssert;
+
+import com.utility.ObjRepository;
+import com.utility.constants;
+import com.utility.library;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeClass;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Properties;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.AfterTest;
+import org.testng.annotations.BeforeSuite;
+import org.testng.annotations.AfterSuite;
+
+public class testNgTestCases3 extends library{
+	
+	
+	// public static int=10;
+
+	@Test(priority = 0)
+	public void validtaeGMO_OnlineLaunchedSuccessfully() {
+		System.out.println("inside Test case validtaeGMO_OnlineLaunchedSuccessfully");
+		library.waitForPageToLoad();
+		String ActualTitle = driver.getTitle();
+		System.out.println("ActualTitle: " + ActualTitle);
+		String ExpectedTitle = "Welcome to Green Mountain Outpost";
+		Assert.assertEquals(ActualTitle, ExpectedTitle);
+
+	}
+
+	@Test(priority = 1, dependsOnMethods = { "validtaeGMO_OnlineLaunchedSuccessfully" })
+	public void validtaeEnterGMO_OnlineSuccessfully() throws InterruptedException {
+		System.out.println("inside Test case validtaeEnterGMO_OnlineSuccessfully");
+		driver.findElement(By.name("bSubmit")).click();
+		waitForPageToLoad();
+		String ActualTile = driver.findElement(By.xpath("//h1[contains(text(),'OnLine Catalog')]")).getText();
+		SoftAssert sa = new SoftAssert();
+		sa.assertEquals(ActualTile, "OnLine Catalog");
+		driver.findElement(By.xpath("//input[@name='QTY_BACKPACKS']")).sendKeys(constants.FrameBackpackQty);
+		driver.findElement(By.xpath("//input[@value='Place An Order']")).click();
+		waitForPageToLoad();
+		String innerhtml = driver.findElement(By.xpath("//p[@align='center']")).getAttribute("innerHTML");
+		String outhtml = driver.findElement(By.xpath("//p[@align='center']")).getAttribute("outerHTML");
+		System.out.println(innerhtml);
+		System.out.println(outhtml);
+		if (innerhtml.contains("Proceed With Order")) {
+			Assert.assertTrue(true, "validated description inside place order page");
+		} else {
+			Assert.assertTrue(false, "validated description inside place order page");
+		}
+		String UnitPrice = driver.findElement(By.xpath("//table/tbody/tr[2]/td[4]")).getText();
+		System.out.println("UnitPrice: " + UnitPrice);
+		String individualUnitPrice = UnitPrice.substring(1).trim();
+		System.out.println(individualUnitPrice);
+		float TotalpriceExternalFrameBack = Float.parseFloat(individualUnitPrice) * 4;
+		System.out.println("TotalpriceExternalFrameBack: " + TotalpriceExternalFrameBack);
+		String Expectedvalue = driver.findElement(By.xpath("//table/tbody/tr[2]/td[5]")).getText().substring(1).trim();
+		float ExpectedPrice = Float.parseFloat(Expectedvalue);
+		Assert.assertEquals(TotalpriceExternalFrameBack, ExpectedPrice);
+		sa.assertAll();
+		driver.navigate().refresh();
+		Thread.sleep(8000);
+		driver.navigate().back();
+		Thread.sleep(8000);
+		driver.navigate().forward();
+		Thread.sleep(8000);
+		System.out.println("current URL:"+driver.getCurrentUrl());
+	}
+	
+	@Test(priority=2)
+	public void ValidatingHandlingOfAlerts() throws InterruptedException{
+		System.out.println("inside ValidatingHandlingOfAlerts");
+		//driver.get(url);
+		driver.navigate().to(ObjProp.getProperty("AlertURL"));
+		waitForPageToLoad();
+		driver.findElement(By.id("alertButton")).click();
+		Alert obj = driver.switchTo().alert();
+		String text = obj.getText();
+		System.out.println(text);
+		Thread.sleep(5000);
+		Assert.assertEquals(text, "You clicked a button");
+		obj.accept();
+		//2nd alert
+		driver.findElement(By.id("timerAlertButton")).click();
+		Thread.sleep(5000);
+		Alert obj1 = driver.switchTo().alert();
+		String timerText = obj1.getText();
+		Assert.assertEquals(timerText, "This alert appeared after 5 seconds");
+		//JavascriptExecutor js = (JavascriptExecutor)driver;
+		//js.executeScript("arguments[0].scrollIntoView(true);",obj1);
+		obj1.accept();
+		//3rd alert
+		driver.findElement(By.id("confirmButton")).click();
+		Alert obj3 = driver.switchTo().alert();
+		String confirmBoxText = obj3.getText();
+		Assert.assertEquals(confirmBoxText, "Do you confirm action?");
+		obj3.dismiss();
+		
+		String confirmBocResultText= driver.findElement(By.id("confirmResult")).getText();
+		Assert.assertEquals(confirmBocResultText, "You selected Cancel");
+		//4th alert
+		driver.findElement(By.id("promtButton")).click();
+		Alert obj4 = driver.switchTo().alert();
+		obj4.sendKeys("I am Learning Selenium");
+		obj4.accept();
+		String PromptResult = driver.findElement(By.id("promptResult")).getText();
+		Assert.assertEquals(PromptResult, "You entered I am Learning Selenium");
+		
+	}
+	
+	@Test(priority=3)
+	public void HandlingFrames() throws Exception{
+		System.out.println("inside HandlingFrames");
+		
+		driver.navigate().to(ObjProp.getProperty("FramesURL"));
+		waitForPageToLoad();
+		//driver.switchTo().frame(ObjRepository.Single_Frame);
+		driver.switchTo().frame("singleframe");
+		takescreeshot(driver);
+	//	driver.findElement(By.xpath(ObjRepository.SingleFrameTextArea)).sendKeys("text area inside frame");
+		library.FindElement(ObjRepository.SingleFrameTextArea).sendKeys("text area inside frame");
+		driver.switchTo().defaultContent();
+		driver.findElement(By.xpath("//a[contains(text(),'Iframe with in an Iframe')]")).click();
+		WebElement ParentframeElement = driver.findElement(By.xpath("//iframe[@src='MultipleFrames.html']"));
+		driver.switchTo().frame(ParentframeElement);
+		WebElement childframeElement = driver.findElement(By.xpath("//iframe[@src='SingleFrame.html']"));
+		driver.switchTo().frame(childframeElement);
+		takescreeshot(driver);
+		driver.findElement(By.xpath("//input[@type='text']")).sendKeys("text area inside second frame");
+		driver.switchTo().defaultContent();
+	}
+
+	@BeforeMethod
+	public void beforeMethod() {
+		System.out.println("inside beforeMethod");
+	}
+
+	@AfterMethod
+	public void afterMethod() {
+		System.out.println("inside afterMethod");
+	}
+
+	@BeforeClass
+	public void beforeClass() {
+		System.out.println("inside beforeClass");
+	}
+
+	@AfterClass
+	public void afterClass() {
+		System.out.println("inside afterClass");
+	}
+
+	@BeforeTest
+	public void beforeTest() {
+		System.out.println("inside beforeTest");
+		launchBrowser();
+	}
+
+	
+	@AfterTest
+	public void afterTest() {
+		System.out.println("inside afterTest");
+	}
+
+	@BeforeSuite
+	public void beforeSuite() {
+		System.out.println("inside beforeSuite");
+		try {
+			library.readProperyFile();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}//declaration
+
+	}
+
+	/*
+	 * WebDriverManager.chromedriver().setup(); driver = new ChromeDriver();
+	 * driver.get("http://demo.borland.com/gmopost/");
+	 * driver.manage().window().maximize();
+	 * driver.manage().timeouts().implicitlyWait(30, TimeUnit.SECONDS); note :
+	 * implicit wait is a global waiting mechanism which is applicable for all
+	 * web elements. If the script is able to identify the web element with in
+	 * given time it will move forward executing other web element
+	 */
+	
+	@AfterSuite
+	public void afterSuite() {
+		System.out.println("inside afterSuite");
+	}
+
+	
+}
