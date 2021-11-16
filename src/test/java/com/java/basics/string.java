@@ -12,13 +12,11 @@ public class string {
 		String s2="helLo";
 		String s3=new String("hello");
 		String s4="helloworldkjava";
-		String s5="hello";
 		System.out.println(s1.equals(s2));///verifies content
 		System.out.println(s1.equalsIgnoreCase(s2));
 		System.out.println(s1==s2);//verified reference
 		System.out.println(s1.equals(s3));
 		System.out.println(s1==s3);
-		System.out.println(s1==s5);
 		System.out.println(s1.compareTo(s3));//compare char length
 		System.out.println(s1.compareTo(s4));
 		System.out.println(s4.compareTo(s1));
