@@ -2,7 +2,7 @@ package com.java.basics;
 
 public class recursionFibanocci {
 	static int n1 = 0, n2 = 1, n3 = 0;
-
+ //fibanocci series 0 1 1 2 3 5 8 13 21 34 55
 	static void printFibo(int count) {
 		if (count > 0) {
 			n3 = n1 + n2;

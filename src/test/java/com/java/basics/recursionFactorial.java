@@ -1,7 +1,7 @@
 package com.java.basics;
 
 public class recursionFactorial {
-	static int factorial(int n) {
+	 int factorial(int n) {
 		if (n == 1)
 			return 1;
 		else {
@@ -11,8 +11,9 @@ public class recursionFactorial {
 	}
 
 	public static void main(String[] args) {
-		/*recursionFactorial obj = new recursionFactorial();
-		obj.factorial(5);*/
-		System.out.println("Factorial of 5 is: " + factorial(5));
+		recursionFactorial obj = new recursionFactorial();
+		obj.factorial(5);
+		System.out.println("Factorial of 5 is: " + obj.factorial(5));
+		//System.out.println("Factorial of 5 is: " + factorial(5));
 	}
 }

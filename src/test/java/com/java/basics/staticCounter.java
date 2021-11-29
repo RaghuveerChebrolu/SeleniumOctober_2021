@@ -4,8 +4,8 @@ public class staticCounter {
 
 	// Java Program to illustrate the use of static variable which
 	// is shared with all objects.
-	//static int count = 0;// will get memory only once and retain its value
-	int count = 0; //every time new reference is creates and memory is allocated
+	static int count = 0;// will get memory only once and retain its value
+	//int count = 0; //every time new reference is creates and memory is allocated
 	staticCounter() {
 		count++;// incrementing the value of static variable
 		System.out.println(count);

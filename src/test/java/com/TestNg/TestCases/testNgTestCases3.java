@@ -3,6 +3,7 @@ package com.TestNg.TestCases;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
+
 import com.utility.ObjRepository;
 import com.utility.constants;
 import com.utility.library;
@@ -19,7 +20,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
@@ -35,7 +38,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
@@ -148,7 +153,8 @@ public class testNgTestCases3 extends library{
 		driver.navigate().to(ObjProp.getProperty("FramesURL"));
 		waitForPageToLoad();
 		//driver.switchTo().frame(ObjRepository.Single_Frame);
-		driver.switchTo().frame("singleframe");
+		//driver.switchTo().frame("singleframe");
+		library.switchToFrameUsingIdOrName("singleframe");
 		takescreeshot(driver);
 	//	driver.findElement(By.xpath(ObjRepository.SingleFrameTextArea)).sendKeys("text area inside frame");
 		library.FindElement(ObjRepository.SingleFrameTextArea).sendKeys("text area inside frame");
@@ -162,6 +168,138 @@ public class testNgTestCases3 extends library{
 		driver.findElement(By.xpath("//input[@type='text']")).sendKeys("text area inside second frame");
 		driver.switchTo().defaultContent();
 	}
+	
+	@Test(priority=4)
+	public void HandlingWindows(){
+		System.out.println("inside HandlingWindows");
+		driver.navigate().to(ObjProp.getProperty("WindowsURL"));
+		waitForPageToLoad();
+		Set<String> AllWindows = driver.getWindowHandles();
+		String ParentWindow = driver.getWindowHandle();
+		for(String IndividualWindow : AllWindows){
+			driver.switchTo().window(IndividualWindow);
+			String title = driver.getTitle();
+			System.out.println("title: "+title);
+			if(title.equalsIgnoreCase("tech mahindra")){
+				driver.manage().window().maximize();
+			}else if(title.equalsIgnoreCase("icici")){
+				driver.close();//closes only the current instance of driver
+			}else if(title.contains("Naukri")){
+				String str = driver.getPageSource();
+				System.out.println("content of page source: "+str);
+			}else {
+				driver.switchTo().window(ParentWindow);
+			}
+		}
+		driver.quit();//closes all instances of browsers which are open
+	}
+	
+	@Test(priority=5)
+	public void HandlingWebTable(){
+		System.out.println("inside HandlingWebTable");
+		driver.navigate().to(ObjProp.getProperty("WebTableURL"));
+		waitForPageToLoad();
+		List<WebElement> AllLastNames = library.FindElements(ObjRepository.WebTableAllNames);
+		//for(WebElement LastName : AllLastNames){
+		for(int i=1;i<=AllLastNames.size();i++){	
+		//String IndLastName = LastName.getText();
+			String IndLastName = driver.findElement(By.xpath("//table[@id='example']/tbody/tr["+i+"]/td[3]")).getText();
+			if(IndLastName.equals("Nash")){
+				String Salary= driver.findElement(By.xpath("//table[@id='example']/tbody/tr["+i+"]/td[7]")).getText();
+				String StartDate= driver.findElement(By.xpath("//table[@id='example']/tbody/tr["+i+"]/td[6]")).getText();
+				String Office= driver.findElement(By.xpath("//table[@id='example']/tbody/tr["+i+"]/td[5]")).getText();
+				String Position= driver.findElement(By.xpath("//table[@id='example']/tbody/tr["+i+"]/td[4]")).getText();
+				System.out.println("Salary: "+Salary);
+				System.out.println("StartDate: "+StartDate);
+				System.out.println("Office: "+Office);
+				System.out.println("Position: "+Position);
+				break;
+			}
+		}
+		
+	}
+	
+	@Test(priority=6)
+	public void MouseRightClickOperation(){
+		System.out.println("inside MouseRightClickOperation");
+		driver.navigate().to(ObjProp.getProperty("mouseOpeartionRightClick"));
+		waitForPageToLoad();
+		WebElement rightClickElement = library.FindElement(ObjRepository.MouseOperationRightClick);
+		Actions obj = new Actions(driver);
+		obj.contextClick(rightClickElement).build().perform();
+		library.FindElement(ObjRepository.DailogBoxCopy).click();
+		Alert alertObj = driver.switchTo().alert();
+		String AlertText = alertObj.getText();
+		System.out.println("AlertText: "+ AlertText);
+		Assert.assertEquals(AlertText, "clicked: copy");
+		/*if(AlertText.contains("copy")){
+			alertObj.accept();
+		}*/
+		alertObj.accept();
+	}
+	
+	@Test(priority=7)
+	public void MouseDoubleClickOperation() throws InterruptedException{
+		System.out.println("inside MouseDoubleClickOperation");
+		driver.navigate().to(ObjProp.getProperty("mouseOpeartionDoubleClick"));
+		waitForPageToLoad();
+		JavascriptExecutor js = (JavascriptExecutor)driver; 
+		js.executeScript("window.scrollBy(0,1000)");
+		Thread.sleep(4000);
+		js.executeScript("window.scrollBy(0,-500)");
+		
+		// js.executeScript("window.scrollBy(0,1000)");//To scroll vertically
+		// Down by 1000 pixels
+		// js.executeScript("window.scrollBy(0,-500)");//To scroll vertically Up
+		// by 500 pixels
+		// js.executeScript("window.scrollBy(500,0)");//To scroll horizontally
+		// right by 500 pixels
+		// js.executeScript("window.scrollBy(-500,0)");//To scroll horizontally
+		// left by 500 pixels
+		// Color loginButtonColour =
+		// Color.fromString(driver.findElement(By.id("login")).getCssValue("color"));
+		
+		WebElement element = library.FindElement(ObjRepository.DoubleCickFrame);
+		js.executeScript("arguments[0].scrollIntoView();", element);
+		//driver.switchTo().frame(element);
+		library.switchToFrameusingWebElementRef(element);
+		
+		WebElement doubleclick = library.FindElement(ObjRepository.DoubleClickbox);
+		Actions Obj = new Actions(driver);
+		Obj.doubleClick(doubleclick).build().perform();
+	
+		Color BackGroundColor = Color.fromString(
+				library.FindElement(ObjRepository.DoubleClickbox).getCssValue("background-color"));
+		System.out.println("BackGroundColor:" + BackGroundColor);
+		String ActualBackGroundColor = BackGroundColor.asRgba();
+		System.out.println("ActualBackGroundColor:" + ActualBackGroundColor);
+		Assert.assertEquals(ActualBackGroundColor, "rgba(255, 255, 0, 1)");
+		driver.switchTo().defaultContent();//to come back from frame to normal page
+	}
+	
+	@Test(priority=8)
+	public void MouseDragAndDropOperation() throws InterruptedException{
+		System.out.println("inside MouseDragAndDropOperation");
+		driver.navigate().to(ObjProp.getProperty("mouseOperationDragAndDrop"));
+		waitForPageToLoad();
+		WebElement frameElement = library.FindElement(ObjRepository.DoubleCickFrame);
+		library.switchToFrameusingWebElementRef(frameElement);
+		WebElement source = library.FindElement(ObjRepository.DragAndDropSource);
+		WebElement target = library.FindElement(ObjRepository.DragAndDropTarget);
+		Actions Obj = new Actions(driver);
+		//Obj.dragAndDrop(source, target).build().perform();
+		Obj.clickAndHold(source);
+		Obj.moveToElement(target);
+		Obj.release(target).build().perform();
+		driver.switchTo().defaultContent();//to come back from frame to normal page
+		
+		/*Color BackGroundColor = Color.fromString(
+				library.FindElement(ObjRepository.DragAndDropTarget).getCssValue("background-color"));
+		String ActualBackGroundColor = BackGroundColor.asRgba();
+		System.out.println("ActualBackGroundColor:" + ActualBackGroundColor);
+		Assert.assertEquals(ActualBackGroundColor, "rgba(255, 255, 0, 1)");*/
+	}
+	
 
 	@BeforeMethod
 	public void beforeMethod() {

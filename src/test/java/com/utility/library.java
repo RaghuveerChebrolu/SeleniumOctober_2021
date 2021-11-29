@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -18,6 +19,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -133,4 +135,49 @@ public class library {
 			}
 			return driver.findElement(search);
 		}
+		
+		public static List<WebElement> FindElements(String Oreplocator){
+			System.out.println(Oreplocator);
+			String locator = Oreplocator.split("&")[0];
+			String value = Oreplocator.split("&")[1];
+			By search = null;
+			if (locator.equals("id")){
+				search=By.id(value);
+			}else if (locator.equals("xpath")){
+				search=By.xpath(value);
+			}else if (locator.equals("name")){
+				search=By.name(value);
+			}else if (locator.equals("className")){
+				search=By.className(value);
+			}else if (locator.equals("tagName")){
+				search=By.tagName(value);
+			}else if (locator.equals("linkText")){
+				search=By.linkText(value);
+			}else if (locator.equals("partialLinkText")){
+				search=By.partialLinkText(value);
+			}else if (locator.equals("cssSelector")){
+				search=By.cssSelector(value);
+			}
+			return driver.findElements(search);
+		}
+		
+		public static void switchToFrameusingWebElementRef(WebElement element){
+			driver.switchTo().frame(element);
+		}
+		
+		public static void switchToFrameUsingIdOrName(String IDorName){
+			driver.switchTo().frame(IDorName);
+		}
+		
+		public static void DoubleClick(WebElement element){
+			Actions obj = new Actions(driver);
+			obj.doubleClick(element).build().perform();
+		}
+		
+		public static void RightClick(WebElement element){
+			Actions obj = new Actions(driver);
+			obj.contextClick(element).build().perform();
+		}
+		
+		
 }
