@@ -3,7 +3,7 @@ package com.TestNg.TestCases;
 import org.testng.annotations.Test;
 import org.testng.asserts.SoftAssert;
 
-
+import com.aventstack.extentreports.Status;
 import com.utility.ObjRepository;
 import com.utility.constants;
 import com.utility.library;
@@ -44,6 +44,7 @@ import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
+import org.testng.ITestResult;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.AfterTest;
@@ -58,6 +59,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority = 0)
 	public void validtaeGMO_OnlineLaunchedSuccessfully() {
 		System.out.println("inside Test case validtaeGMO_OnlineLaunchedSuccessfully");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		library.waitForPageToLoad();
 		String ActualTitle = driver.getTitle();
 		System.out.println("ActualTitle: " + ActualTitle);
@@ -69,6 +71,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority = 1, dependsOnMethods = { "validtaeGMO_OnlineLaunchedSuccessfully" })
 	public void validtaeEnterGMO_OnlineSuccessfully() throws InterruptedException {
 		System.out.println("inside Test case validtaeEnterGMO_OnlineSuccessfully");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		driver.findElement(By.name("bSubmit")).click();
 		waitForPageToLoad();
 		String ActualTile = driver.findElement(By.xpath("//h1[contains(text(),'OnLine Catalog')]")).getText();
@@ -108,6 +111,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority=2)
 	public void ValidatingHandlingOfAlerts() throws InterruptedException{
 		System.out.println("inside ValidatingHandlingOfAlerts");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		//driver.get(url);
 		driver.navigate().to(ObjProp.getProperty("AlertURL"));
 		waitForPageToLoad();
@@ -149,7 +153,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority=3)
 	public void HandlingFrames() throws Exception{
 		System.out.println("inside HandlingFrames");
-		
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		driver.navigate().to(ObjProp.getProperty("FramesURL"));
 		waitForPageToLoad();
 		//driver.switchTo().frame(ObjRepository.Single_Frame);
@@ -172,6 +176,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority=4)
 	public void HandlingWindows(){
 		System.out.println("inside HandlingWindows");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		driver.navigate().to(ObjProp.getProperty("WindowsURL"));
 		waitForPageToLoad();
 		Set<String> AllWindows = driver.getWindowHandles();
@@ -183,20 +188,21 @@ public class testNgTestCases4 extends library{
 			if(title.equalsIgnoreCase("tech mahindra")){
 				driver.manage().window().maximize();
 			}else if(title.equalsIgnoreCase("icici")){
-				driver.close();//closes only the current instance of driver
+				//driver.close();//closes only the current instance of driver
 			}else if(title.contains("Naukri")){
 				String str = driver.getPageSource();
-				System.out.println("content of page source: "+str);
+				//System.out.println("content of page source: "+str);
 			}else {
 				driver.switchTo().window(ParentWindow);
 			}
 		}
-		driver.quit();//closes all instances of browsers which are open
+		//driver.quit();//closes all instances of browsers which are open
 	}
 	
 	@Test(priority=5)
 	public void HandlingWebTable(){
 		System.out.println("inside HandlingWebTable");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		driver.navigate().to(ObjProp.getProperty("WebTableURL"));
 		waitForPageToLoad();
 		List<WebElement> AllLastNames = library.FindElements(ObjRepository.WebTableAllNames);
@@ -222,6 +228,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority=6)
 	public void MouseRightClickOperation(){
 		System.out.println("inside MouseRightClickOperation");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		driver.navigate().to(ObjProp.getProperty("mouseOpeartionRightClick"));
 		waitForPageToLoad();
 		WebElement rightClickElement = library.FindElement(ObjRepository.MouseOperationRightClick);
@@ -240,6 +247,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority=7)
 	public void MouseDoubleClickOperation() throws InterruptedException{
 		System.out.println("inside MouseDoubleClickOperation");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		driver.navigate().to(ObjProp.getProperty("mouseOpeartionDoubleClick"));
 		waitForPageToLoad();
 		JavascriptExecutor js = (JavascriptExecutor)driver; 
@@ -278,6 +286,7 @@ public class testNgTestCases4 extends library{
 	@Test(priority=8)
 	public void MouseDragAndDropOperation() throws InterruptedException{
 		System.out.println("inside MouseDragAndDropOperation");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
 		driver.navigate().to(ObjProp.getProperty("mouseOperationDragAndDrop"));
 		waitForPageToLoad();
 		WebElement frameElement = library.FindElement(ObjRepository.DoubleCickFrame);
@@ -305,13 +314,35 @@ public class testNgTestCases4 extends library{
 	}
 
 	@AfterMethod
-	public void afterMethod() {
+	public void afterMethod(ITestResult result) throws Exception{
 		System.out.println("inside afterMethod");
-	}
+			if (result.getStatus() == ITestResult.FAILURE) {
+				// to add test case name in extent report
+			extenttest.log(Status.FAIL, "TEST CASE FAILED IS " + result.getName()); 
+			// to add error/exception that occured in extent report
+			extenttest.log(Status.FAIL, "TEST CASE FAILED IS " + result.getThrowable()); 
+			String screenshotPath = library.takescreeshot(driver, result.getName());
+			// adding screen shot in extent report
+			extenttest.addScreenCaptureFromPath(screenshotPath);
+			} else if (result.getStatus() == ITestResult.SKIP) {
+				extenttest.log(Status.SKIP, "Test Case SKIPPED IS " + result.getName());
+			}
+			else if (result.getStatus() == ITestResult.SUCCESS) {
+				extenttest.log(Status.PASS, "Test Case PASSED IS " + result.getName());
+			}
+			//driver.quit();
+		}
+	
 
 	@BeforeClass
 	public void beforeClass() {
 		System.out.println("inside beforeClass");
+		try {
+			StartExtentReport();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@AfterClass
@@ -329,6 +360,7 @@ public class testNgTestCases4 extends library{
 	@AfterTest
 	public void afterTest() {
 		System.out.println("inside afterTest");
+		extentReport.flush();// after this line execution export report will be generated
 	}
 
 	@BeforeSuite

@@ -24,13 +24,53 @@ import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
+import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
+import com.aventstack.extentreports.reporter.configuration.Theme;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class library {
 	public static WebDriver driver = null;
 	public static Properties ObjProp = new Properties();
+	public static ExtentHtmlReporter htmlReporter;
+	public static ExtentReports extentReport;
+	public static ExtentTest extenttest;
 	
 	//helper methods
+		/*ExtentHtmlReporter    : responsible for look and feel of the report ,
+		we can specify the report name , document title , theme of the report 
+
+		ExtentReports : used to create entries in your report , create test cases in report , 
+		who executed the test case, environment name , browser 
+
+		ExtentTest : update pass fail and skips and logs  the test cases results*/
+		//Below is the method to StartExtentReport 
+		//Author : Raghu
+		public static void StartExtentReport() throws Exception {
+			// TODO Auto-generated method stub
+			try {
+				// specify location of the report
+				htmlReporter = new ExtentHtmlReporter(System.getProperty("user.dir") + "//src//test//resources/ExtentReportV4.html");
+				htmlReporter.config().setDocumentTitle("Automation Report"); // Tile of report
+				htmlReporter.config().setReportName("Functional and Regression Testing"); // Name of the report
+				htmlReporter.config().setTheme(Theme.STANDARD);
+
+				extentReport = new ExtentReports();
+				extentReport.attachReporter(htmlReporter);
+
+				// Passing General information
+				extentReport.setSystemInfo("Host name", "localhost");
+				extentReport.setSystemInfo("Environemnt", "UAT");
+				extentReport.setSystemInfo("user", "Raghu");
+				extentReport.setSystemInfo("Browser", ObjProp.getProperty("browser"));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 		//below is the defination
 		public static void readProperyFile() throws Exception {
 			// TODO Auto-generated method stub
@@ -106,6 +146,17 @@ public class library {
 			String dateName = new SimpleDateFormat("yyyyMMDDhhmmss").format(new Date());
 			System.out.println(dateName);
 			String destination = System.getProperty("user.dir") + "//screenshots//" + dateName
+					+ "captured.png";
+			FileUtils.copyFile(source, new File(destination));
+			return destination;
+		}
+		
+		public static String takescreeshot(WebDriver driver,String testCaseName) throws Exception {
+			File source = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+			//String dateName = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss").format(new Date());
+			String dateName = new SimpleDateFormat("yyyyMMDDhhmmss").format(new Date());
+			System.out.println(dateName);
+			String destination = System.getProperty("user.dir") + "//screenshots//" + dateName +testCaseName
 					+ "captured.png";
 			FileUtils.copyFile(source, new File(destination));
 			return destination;
