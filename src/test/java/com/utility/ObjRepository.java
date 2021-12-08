@@ -17,6 +17,9 @@ public class ObjRepository {
  public static final String FileUploadBrowse = constants.xpath+"&"+"//input[@id='input-4']/preceding-sibling::span";
  public static final String FileUploadBrowse1 = constants.xpath+"&"+"/html/body/section/div[1]/div/div/div[1]/div[3]/span";
  
+ public static final String FileDownload1MB = constants.xpath+"&"+"//a[@download='file-sample_1MB.doc']";
+
+ 
 
 
 }

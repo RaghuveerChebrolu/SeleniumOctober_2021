@@ -378,8 +378,35 @@ public class testNgTestCases4 extends library{
 	}
 	
 	
-	
-	
+	@Test(priority=11)
+	public void ValidatingFileDownload() throws InterruptedException{
+		System.out.println("inside ValidatingFileDownload");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
+		driver.navigate().to(ObjProp.getProperty("FileDownload"));
+		waitForPageToLoad();
+		Thread.sleep(5000);
+		WebElement element = library.FindElement(ObjRepository.FileDownload1MB);
+		Actions obj = new Actions(driver);
+		obj.click(element).build().perform();
+		
+		Thread.sleep(10000);
+		File objFile = new File(System.getProperty("user.dir"));
+		File[] listOfFiles = objFile.listFiles();
+		boolean fileFound = false;
+		File obj_File = null;
+		for (File IndividualFile : listOfFiles) {
+			String FileName = IndividualFile.getName();
+			System.out.println(FileName);
+			if (FileName.contains("file-sample")) {
+				fileFound = true;
+				obj_File = new File(FileName);
+			}
+		}
+		Assert.assertTrue(fileFound, "File Downloaded Not Found");
+		obj_File.deleteOnExit();
+		
+	}
+		
 
 	@BeforeMethod
 	public void beforeMethod() {
