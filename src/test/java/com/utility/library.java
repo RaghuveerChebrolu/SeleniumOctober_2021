@@ -2,6 +2,10 @@ package com.utility;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -228,6 +232,26 @@ public class library {
 		public static void RightClick(WebElement element){
 			Actions obj = new Actions(driver);
 			obj.contextClick(element).build().perform();
+		}
+
+		//add href and verify in overloading
+		public static int  ValidateLink(String link) throws Exception {
+			try {
+				URL Obj = new URL(link);
+				HttpURLConnection objHttpUrlconnection = (HttpURLConnection)Obj.openConnection();
+				objHttpUrlconnection.connect();
+				int HttpStatusCode  = objHttpUrlconnection.getResponseCode();
+				if(HttpStatusCode>=200 && HttpStatusCode<400){
+					System.out.println(link + " is valid link . Status code is : "+HttpStatusCode);
+				}else if(HttpStatusCode>=400 && HttpStatusCode<600){
+					System.out.println(link + " is Not a valid link .Status code is : "+HttpStatusCode);
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return 0;
+			
 		}
 		
 		

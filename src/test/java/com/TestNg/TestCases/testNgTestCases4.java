@@ -14,6 +14,14 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -306,6 +314,71 @@ public class testNgTestCases4 extends library{
 		System.out.println("ActualBackGroundColor:" + ActualBackGroundColor);
 		Assert.assertEquals(ActualBackGroundColor, "rgba(255, 255, 0, 1)");*/
 	}
+	
+	
+	@Test(priority=9)
+	public void ValidateLinks() throws InterruptedException{
+		System.out.println("inside ValidateLinks");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
+		driver.navigate().to(ObjProp.getProperty("Links"));
+		waitForPageToLoad();
+		List<WebElement> AllLinks = library.FindElements(ObjRepository.Links);
+		for(WebElement individualLink:AllLinks){
+			String link = individualLink.getAttribute("href");
+			try {
+				library.ValidateLink(link);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@Test(priority=10)
+	public void ValidateFileUpload() throws InterruptedException, AWTException{
+		System.out.println("inside ValidateFileUpload");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
+		driver.navigate().to(ObjProp.getProperty("FileUpload"));
+		waitForPageToLoad();
+		Thread.sleep(8000);
+		//JavascriptExecutor js = (JavascriptExecutor)driver;
+		WebElement element = library.FindElement(ObjRepository.FileUploadBrowse1);
+		//js.executeScript("arguments[0].scrollIntoView();", element);
+		//element.click();
+		Actions obj = new Actions(driver);
+		obj.click(element).build().perform();
+		//library.FindElement(ObjRepository.FileUploadBrowse1).click();
+		StringSelection objStringSelection = new StringSelection(
+				System.getProperty("user.dir") + "\\src\\test\\resources\\Sample.jpg");
+		Clipboard objClipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		objClipboard.setContents(objStringSelection, null);
+		try {
+			Transferable objTransferable = objClipboard.getContents(null);
+			if (objTransferable.isDataFlavorSupported(DataFlavor.stringFlavor))
+				System.out.println(objTransferable.getTransferData(DataFlavor.stringFlavor));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Robot objRobot = new Robot();
+		objRobot.delay(250);
+		objRobot.keyPress(KeyEvent.VK_ENTER);
+		objRobot.keyRelease(KeyEvent.VK_ENTER);
+		Thread.sleep(2000);
+		objRobot.keyPress(KeyEvent.VK_CONTROL);
+		objRobot.keyPress(KeyEvent.VK_V);
+		Thread.sleep(2000);
+		objRobot.keyRelease(KeyEvent.VK_V);
+		objRobot.keyRelease(KeyEvent.VK_CONTROL);
+		Thread.sleep(4000);
+		objRobot.keyPress(KeyEvent.VK_ENTER);
+		Thread.sleep(2000);
+		objRobot.keyRelease(KeyEvent.VK_ENTER);
+		Thread.sleep(2000);
+	}
+	
+	
+	
 	
 
 	@BeforeMethod
