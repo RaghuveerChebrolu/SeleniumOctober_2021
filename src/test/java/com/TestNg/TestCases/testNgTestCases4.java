@@ -35,6 +35,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.Alert;
@@ -427,6 +428,35 @@ public class testNgTestCases4 extends library{
 				testData.get("Address");
 				System.out.println(testData.get("FirstName"));
 				System.out.println(testData.get("Address"));
+				library.FindElement(ObjRepository.DataDrivenFirstName).clear();
+				library.FindElement(ObjRepository.DataDrivenFirstName).sendKeys(testData.get("FirstName"));
+				library.FindElement(ObjRepository.DataDrivenlastName).clear();
+				library.FindElement(ObjRepository.DataDrivenlastName).sendKeys(testData.get("LastName"));
+				library.FindElement(ObjRepository.DataDrivenAddress).clear();
+				library.FindElement(ObjRepository.DataDrivenAddress).sendKeys(testData.get("Address"));
+				library.FindElement(ObjRepository.DataDrivenEmailAddress).clear();
+				library.FindElement(ObjRepository.DataDrivenEmailAddress).sendKeys(testData.get("EmailAddress"));
+				library.FindElement(ObjRepository.DataDrivenPhoneNumber).clear();
+				library.FindElement(ObjRepository.DataDrivenPhoneNumber).sendKeys(testData.get("PhoneNumber"));
+				
+				if(testData.get("Gender").equalsIgnoreCase("male")){
+					library.FindElement(ObjRepository.DataDrivenGenderMale).click();
+				}else{
+					library.FindElement(ObjRepository.DataDrivenGenderFeMale).click();
+				}
+				
+				if(testData.get("Hobbies").equalsIgnoreCase("Cricket")){
+					library.FindElement(ObjRepository.DataDrivenCricket).click();
+				}else if(testData.get("Hobbies").equalsIgnoreCase("MOvies")){
+					library.FindElement(ObjRepository.DataDrivenMovies).click();
+				}else if(testData.get("Hobbies").equalsIgnoreCase("hockey")){
+					library.FindElement(ObjRepository.DataDrivenHockey).click();
+				}
+				
+				library.FindElement(ObjRepository.DataDrivenLanguage).click();
+				List<WebElement> AllLanguages= library.FindElements(ObjRepository.DataDrivenAll_Languags);
+				SelectValueFromDropDown(AllLanguages,testData.get("Languages"));
+				
 			}
 			
 		} catch (FileNotFoundException e) {
@@ -434,16 +464,19 @@ public class testNgTestCases4 extends library{
 			e.printStackTrace();
 		}
 	}
-		
 
 	private HashMap<String, String> ReadTestDataExcelFile(XSSFSheet sheetObj, int row) {
+		DataFormatter objFormatter = new DataFormatter();
 		testData.put("RunMode", sheetObj.getRow(row).getCell(0).getStringCellValue());
 		testData.put("TestCaseName", sheetObj.getRow(row).getCell(1).getStringCellValue());
 		testData.put("FirstName", sheetObj.getRow(row).getCell(2).getStringCellValue());
 		testData.put("LastName", sheetObj.getRow(row).getCell(3).getStringCellValue());
 		testData.put("Address", sheetObj.getRow(row).getCell(4).getStringCellValue());
 		testData.put("EmailAddress", sheetObj.getRow(row).getCell(5).getStringCellValue());
-		//testData.put("PhoneNumber", sheetObj.getRow(row).getCell(6).getStringCellValue());
+		
+		String PhoneNumber = objFormatter.formatCellValue(sheetObj.getRow(row).getCell(6));
+		testData.put("PhoneNumber", PhoneNumber);
+		
 		testData.put("Gender", sheetObj.getRow(row).getCell(7).getStringCellValue());
 		testData.put("Hobbies", sheetObj.getRow(row).getCell(8).getStringCellValue());
 		testData.put("Languages", sheetObj.getRow(row).getCell(9).getStringCellValue());
@@ -451,9 +484,15 @@ public class testNgTestCases4 extends library{
 		testData.put("Skills", sheetObj.getRow(row).getCell(10).getStringCellValue());
 		testData.put("Country", sheetObj.getRow(row).getCell(11).getStringCellValue());
 		testData.put("SelectCountry", sheetObj.getRow(row).getCell(12).getStringCellValue());
-		//testData.put("DOB_YY", sheetObj.getRow(row).getCell(13).getStringCellValue());
+		
+		String DOB_MM = objFormatter.formatCellValue(sheetObj.getRow(row).getCell(13));
+		testData.put("DOB_MM", DOB_MM);
+		
 		testData.put("DOB_MM", sheetObj.getRow(row).getCell(14).getStringCellValue());
-		//testData.put("DOB_DD", sheetObj.getRow(row).getCell(15).getStringCellValue());
+		
+		String DOB_DD = objFormatter.formatCellValue(sheetObj.getRow(row).getCell(15));
+		testData.put("DOB_DD", DOB_DD);
+		
 		testData.put("Password", sheetObj.getRow(row).getCell(16).getStringCellValue());
 		testData.put("confirmPassword", sheetObj.getRow(row).getCell(17).getStringCellValue());
 
