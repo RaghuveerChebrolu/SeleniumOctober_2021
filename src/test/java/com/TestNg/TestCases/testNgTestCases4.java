@@ -28,12 +28,15 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -61,7 +64,7 @@ import org.testng.annotations.AfterSuite;
 
 public class testNgTestCases4 extends library{
 	
-	
+	HashMap<String,String> testData = new HashMap<String,String>();
 	// public static int=10;
 
 	@Test(priority = 0)
@@ -406,7 +409,56 @@ public class testNgTestCases4 extends library{
 		obj_File.deleteOnExit();
 		
 	}
+	
+	@Test(priority=12)
+	public void ValidDataDriven() throws IOException{
+		System.out.println("inside ValidDataDriven");
+		extenttest = extentReport.createTest(new Object() {}.getClass().getEnclosingMethod().getName());
+		driver.navigate().to(ObjProp.getProperty("AutomationRegister"));
+		waitForPageToLoad();
+		try {
+			FileInputStream FileinputObj = new FileInputStream(new File(System.getProperty("user.dir")+"//src//test//resources//AutomationDemoSite.xlsx"));
+			XSSFWorkbook WorkBookObj = new XSSFWorkbook(FileinputObj);
+			XSSFSheet SheetObj = WorkBookObj.getSheet("TestData");
+			int TotalRows=SheetObj.getLastRowNum();
+			for (int row=1; row<=TotalRows;row++){
+				testData=ReadTestDataExcelFile(SheetObj,row);
+				testData.get("FirstName");
+				testData.get("Address");
+				System.out.println(testData.get("FirstName"));
+				System.out.println(testData.get("Address"));
+			}
+			
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 		
+
+	private HashMap<String, String> ReadTestDataExcelFile(XSSFSheet sheetObj, int row) {
+		testData.put("RunMode", sheetObj.getRow(row).getCell(0).getStringCellValue());
+		testData.put("TestCaseName", sheetObj.getRow(row).getCell(1).getStringCellValue());
+		testData.put("FirstName", sheetObj.getRow(row).getCell(2).getStringCellValue());
+		testData.put("LastName", sheetObj.getRow(row).getCell(3).getStringCellValue());
+		testData.put("Address", sheetObj.getRow(row).getCell(4).getStringCellValue());
+		testData.put("EmailAddress", sheetObj.getRow(row).getCell(5).getStringCellValue());
+		//testData.put("PhoneNumber", sheetObj.getRow(row).getCell(6).getStringCellValue());
+		testData.put("Gender", sheetObj.getRow(row).getCell(7).getStringCellValue());
+		testData.put("Hobbies", sheetObj.getRow(row).getCell(8).getStringCellValue());
+		testData.put("Languages", sheetObj.getRow(row).getCell(9).getStringCellValue());
+		
+		testData.put("Skills", sheetObj.getRow(row).getCell(10).getStringCellValue());
+		testData.put("Country", sheetObj.getRow(row).getCell(11).getStringCellValue());
+		testData.put("SelectCountry", sheetObj.getRow(row).getCell(12).getStringCellValue());
+		//testData.put("DOB_YY", sheetObj.getRow(row).getCell(13).getStringCellValue());
+		testData.put("DOB_MM", sheetObj.getRow(row).getCell(14).getStringCellValue());
+		//testData.put("DOB_DD", sheetObj.getRow(row).getCell(15).getStringCellValue());
+		testData.put("Password", sheetObj.getRow(row).getCell(16).getStringCellValue());
+		testData.put("confirmPassword", sheetObj.getRow(row).getCell(17).getStringCellValue());
+
+		return testData;
+	}
 
 	@BeforeMethod
 	public void beforeMethod() {
