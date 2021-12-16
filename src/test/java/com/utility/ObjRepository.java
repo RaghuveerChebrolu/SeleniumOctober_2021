@@ -41,8 +41,13 @@ public class ObjRepository {
  public static final String DataDrivenDOB_MM = constants.xpath+"&"+"//*[@placeholder='Month']";
  public static final String DataDrivenAllMonths = constants.xpath+"&"+"//*[@placeholder='Month']/option";
  public static final String DataDrivenDOB_DD = constants.xpath+"&"+"//*[@id='daybox']";
+ public static final String DataDrivenALLDays = constants.xpath+"&"+"//*[@id='daybox']/option";
  public static final String DataDrivenPassword = constants.ID+"&"+"firstpassword";
  public static final String DataDrivenConformPwd = constants.ID+"&"+"secondpassword";
+ public static final String DataDrivenTag_Skills= constants.xpath+"&"+"//label[contains(text(),'Skills')]";
+ public static final String DataDrivenCloseIconLanguage= constants.xpath+"&"+"//span[@class='ui-icon ui-icon-close']";
+
+
  
  
  

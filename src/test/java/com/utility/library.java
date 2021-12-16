@@ -263,8 +263,27 @@ public class library {
 			
 		}
 		
-	public void SelectValueFromDropDown(List<WebElement> AllDropDownItems, String DropDownValue) {
-		
+	public void SelectValueFromDropDownLanguage(List<WebElement> AllDropDownItems, String DropDownValueFromExcel) {
+		for(int i=0;i<AllDropDownItems.size();i++){
+			String ActualDropDownValue=AllDropDownItems.get(i).getText();
+			if(ActualDropDownValue.equalsIgnoreCase(DropDownValueFromExcel)){
+				//AllDropDownItems.get(i).click();
+				JavascriptExecutor js = (JavascriptExecutor)driver;
+				js.executeScript("arguments[0].click();", AllDropDownItems.get(i));
+			}
+		}
+			
+		}
+	
+	public void SelectValueFromDropDown(List<WebElement> AllDropDownItems, String DropDownValueFromExcel) {
+		for(int i=0;i<AllDropDownItems.size();i++){
+			String ActualDropDownValue=AllDropDownItems.get(i).getText();
+			if(ActualDropDownValue.equalsIgnoreCase(DropDownValueFromExcel)){
+				AllDropDownItems.get(i).click();
+				//JavascriptExecutor js = (JavascriptExecutor)driver;
+				//js.executeScript("arguments[0].click();", AllDropDownItems.get(i));
+			}
+		}
 			
 		}
 }
