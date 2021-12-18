@@ -435,7 +435,7 @@ public class testNgTestCases4 extends library {
 	}
 
 	@Test(priority = 12)
-	public void ValidDataDriven() throws IOException, AWTException {
+	public void ValidDataDriven() throws IOException, AWTException, InterruptedException {
 		System.out.println("inside ValidDataDriven");
 		extenttest = extentReport.createTest(new Object() {
 		}.getClass().getEnclosingMethod().getName());
@@ -486,7 +486,13 @@ public class testNgTestCases4 extends library {
 					SelectValueFromDropDownLanguage(AllLanguages, testData.get("Languages"));
 
 					library.FindElement(ObjRepository.DataDrivenTag_Skills).click();
-
+					Thread.sleep(2000);
+					
+					JavascriptExecutor js = (JavascriptExecutor)driver;
+					js.executeScript("window.scrollBy(0,500)");//To scroll vertically
+					
+					Thread.sleep(2000);
+					
 					library.FindElement(ObjRepository.DataDrivenSkills).click();
 					List<WebElement> AllSkills = library.FindElements(ObjRepository.DataDrivenAllskills);
 					SelectValueFromDropDown(AllSkills, testData.get("Skills"));
@@ -516,6 +522,9 @@ public class testNgTestCases4 extends library {
 					library.FindElement(ObjRepository.DataDrivenConformPwd).clear();
 					library.FindElement(ObjRepository.DataDrivenConformPwd).sendKeys(testData.get("confirm_password"));
 					
+					
+					js.executeScript("window.scrollBy(0,-500)");
+					Thread.sleep(2000);
 					FileOutputStream objFileOutputStream = new FileOutputStream(new File(System.getProperty("user.dir") + "//src//test//resources//AutomationDemoSite.xlsx"));
 					WriteResultsToExcel(WorkBookObj,SheetObj,row);
 					WorkBookObj.write(objFileOutputStream);

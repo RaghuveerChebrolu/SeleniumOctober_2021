@@ -34,7 +34,7 @@ public class ObjRepository {
  public static final String DataDrivenAll_Languags = constants.xpath+"&"+"//*[@id='msdd']/following-sibling::div/ul/li/a";
  public static final String DataDrivenSkills = constants.ID+"&"+"Skills";
  public static final String DataDrivenAllskills = constants.xpath+"&"+"//*[@id='Skills']/option";
- public static final String DataDrivenSelectCountry = constants.xpath+"&"+"//*[@role='combobox']";
+ public static final String DataDrivenSelectCountry = constants.xpath+"&"+"//*[@role='combobox']/span[2]";
  public static final String DataDrivenTextBox_SelectCountry = constants.xpath+"&"+"//*[@type='search']";
  public static final String DataDrivenDOB_YY = constants.xpath+"&"+"//*[@id='yearbox']";
  public static final String DataDrivenAllYears = constants.xpath+"&"+"//*[@id='yearbox']/option";
