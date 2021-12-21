@@ -39,7 +39,7 @@ import com.aventstack.extentreports.reporter.configuration.Theme;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class library {
-	public static WebDriver driver = null;
+	public static WebDriver driver ;
 	public static Properties ObjProp = new Properties();
 	public static ExtentHtmlReporter htmlReporter;
 	public static ExtentReports extentReport;

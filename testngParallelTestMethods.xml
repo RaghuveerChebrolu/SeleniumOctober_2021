@@ -2,7 +2,7 @@
 <suite name="Suite" parallel="methods"  thread-count="2">
   <test name="Test" group-by-instances="true">>
     <classes>
-      <class name="com.testNg.concepts.TestngParalleTestCases"/>
+      <class name="com.testNgConcepts.TestngParalleTestCases"/>
     </classes>
   </test> <!-- Test -->
 </suite> <!-- Suite -->
